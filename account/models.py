@@ -20,7 +20,7 @@ class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **kwargs):
         kwargs.setdefault('is_staff', False)
         kwargs.setdefault('is_superuser', False)
-        return self.create_user(email, password, **kwargs)
+        return self._create_user(email, password, **kwargs)
 
     def create_superuser(self, email, password, **kwargs):
         kwargs.setdefault('is_staff', True)
@@ -31,6 +31,7 @@ class UserManager(BaseUserManager):
         if kwargs.get('is_superuser') is not True:
             raise ValueError('Superuser must have status is staff=True!')
         return self._create_user(email, password, **kwargs)
+
 
 class CustomUser(AbstractUser):
     email = models.EmailField('email address', unique=True)
