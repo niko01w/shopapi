@@ -54,3 +54,6 @@ class CustomUser(AbstractUser):
         import uuid
         code = str(uuid.uuid4())
         self.activation_code = code
+
+class Spam_Contacts(models.Model):
+        email = models.EmailField('email address', unique=True)

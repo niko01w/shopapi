@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from account.models import Spam_Contacts
+
 User = get_user_model()
 
 
@@ -78,3 +80,17 @@ class RestorePasswordSerializer(serializers.Serializer):
         return user
 
 
+class SpamViewSerializer(serializers.ModelSerializer):
+    email = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Spam_Contacts
+        fields = '__all__'
+
+    def validate(self, attrs):
+        email = self.context['request'].user.email
+        if Spam_Contacts.objects.filter(email=email).exists():
+            raise serializers.ValidationError(
+                'You are already followed to spam'
+            )
+        return attrs
